@@ -29,42 +29,44 @@ final class R10KitProvider: R10Provider {
             }
         }
 
-        // Xcode 16.4's Swift 5 compiler cannot infer the generic parameters
-        // for Task.detached from this AsyncStream closure. Specialising the
-        // Task type at the call site removes that inference path entirely.
         let shotStream: AsyncStream<R10ShotEvent> = device.shotEvents
         let shotContinuation: AsyncStream<AppShot>.Continuation? = continuation
 
-        let shotConsumer = Task<Void, Never>.detached {
-            for await shot in shotStream {
-                let club = shot.metrics.clubMetrics
-                let ball = shot.metrics.ballMetrics
-                let swing = shot.metrics.swingMetrics
-                let received = Date()
+        // The explicit operation signature is intentional. Xcode 16.4's
+        // Swift 5 compiler otherwise reports the detached Task expression
+        // as ambiguous when the operation contains an AsyncStream loop.
+        let shotConsumer: Task<Void, Never> = Task.detached(
+            priority: nil,
+            operation: { @Sendable () async -> Void in
+                for await shot in shotStream {
+                    let club = shot.metrics.clubMetrics
+                    let ball = shot.metrics.ballMetrics
+                    let swing = shot.metrics.swingMetrics
+                    let received = Date()
 
-                shotContinuation?.yield(AppShot(
-                    r10ShotID: Int64(shot.metrics.shotId),
-                    shotType: String(describing: shot.metrics.shotType),
-                    impactAt: shot.wallClockImpactAt,
-                    receivedAt: received,
-                    clubHeadSpeedMps: club?.clubHeadSpeed,
-                    ballSpeedMps: ball?.ballSpeed,
-                    launchAngleDeg: ball?.launchAngle,
-                    launchDirectionDeg: ball?.launchDirection,
-                    totalSpinRpm: ball?.totalSpin,
-                    spinAxisDeg: ball?.spinAxis,
-                    attackAngleDeg: club?.attackAngle,
-                    clubPathDeg: club?.clubAnglePath,
-                    clubFaceDeg: club?.clubAngleFace,
-                    backswingStartMs: swing?.backSwingStartTime,
-                    downswingStartMs: swing?.downSwingStartTime,
-                    impactTimeMs: swing?.impactTime,
-                    followThroughEndMs: swing?.followThroughEndTime
-                ))
+                    shotContinuation?.yield(AppShot(
+                        r10ShotID: Int64(shot.metrics.shotId),
+                        shotType: String(describing: shot.metrics.shotType),
+                        impactAt: shot.wallClockImpactAt,
+                        receivedAt: received,
+                        clubHeadSpeedMps: club?.clubHeadSpeed,
+                        ballSpeedMps: ball?.ballSpeed,
+                        launchAngleDeg: ball?.launchAngle,
+                        launchDirectionDeg: ball?.launchDirection,
+                        totalSpinRpm: ball?.totalSpin,
+                        spinAxisDeg: ball?.spinAxis,
+                        attackAngleDeg: club?.attackAngle,
+                        clubPathDeg: club?.clubAnglePath,
+                        clubFaceDeg: club?.clubAngleFace,
+                        backswingStartMs: swing?.backSwingStartTime,
+                        downswingStartMs: swing?.downSwingStartTime,
+                        impactTimeMs: swing?.impactTime,
+                        followThroughEndMs: swing?.followThroughEndTime
+                    ))
+                }
             }
-        }
+        )
 
-        // Keep a strong reference until the consumer has been started.
         withExtendedLifetime(shotConsumer) {}
 
         await device.start()
