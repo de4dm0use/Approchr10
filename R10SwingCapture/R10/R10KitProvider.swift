@@ -30,14 +30,14 @@ final class R10KitProvider: R10Provider {
         }
 
         // R10ShotEvent and AppShot are Sendable. The SDK exposes
-        // shotEvents as a nonisolated AsyncStream. Start the consumer
-        // without assigning the Task to a stored property: Xcode 16.4's
-        // Swift 5 compiler otherwise reports an ambiguous Task expression
-        // for this particular generic AsyncStream/actor combination.
+        // shotEvents as a nonisolated AsyncStream. Give the detached
+        // operation an explicit Void result so Swift 5/Xcode 16.4 does
+        // not have to infer the Task generic parameters from the loop.
         let shotStream: AsyncStream<R10ShotEvent> = device.shotEvents
         let shotContinuation: AsyncStream<AppShot>.Continuation? = continuation
 
-        _ = Task.detached(priority: nil) {
+        let shotConsumer: Task<Void, Never> = Task.detached {
+            () -> Void in
             for await shot in shotStream {
                 let club = shot.metrics.clubMetrics
                 let ball = shot.metrics.ballMetrics
@@ -65,6 +65,9 @@ final class R10KitProvider: R10Provider {
                 ))
             }
         }
+        // Keep the task alive for the lifetime of this provider. The
+        // stream is finished by stop(), which terminates the consumer.
+        withExtendedLifetime(shotConsumer) {}
 
         await device.start()
         await connection.start()
