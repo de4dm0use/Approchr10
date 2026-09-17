@@ -1,5 +1,6 @@
 import Foundation
 
+@MainActor
 final class DemoR10Provider: R10Provider {
     let name = "Demo R10"
     private(set) var isConnected = false
