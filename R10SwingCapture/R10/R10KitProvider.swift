@@ -12,30 +12,67 @@ final class R10KitProvider: R10Provider {
     private var shotTask: Task<Void, Never>?
     private var continuation: AsyncStream<AppShot>.Continuation?
 
-    func shots() -> AsyncStream<AppShot> { AsyncStream { continuation in self.continuation = continuation } }
+    func shots() -> AsyncStream<AppShot> {
+        AsyncStream<AppShot> { continuation in
+            self.continuation = continuation
+        }
+    }
 
     func start() async {
-        phaseTask?.cancel(); shotTask?.cancel()
-        phaseTask = Task { [weak self] in
+        phaseTask?.cancel()
+        shotTask?.cancel()
+
+        phaseTask = Task<Void, Never> { [weak self] in
             guard let self else { return }
-            for await phase in connection.phases {
-                await device.notifyPhaseChange(phase)
-                if !Task.isCancelled { isConnected = true }
+            for await phase in self.connection.phases {
+                await self.device.notifyPhaseChange(phase)
+                if !Task.isCancelled {
+                    self.isConnected = true
+                }
             }
         }
-        shotTask = Task { [weak self] in
+
+        shotTask = Task<Void, Never> { [weak self] in
             guard let self else { return }
-            for await shot in device.shotEvents {
-                let club = shot.metrics.clubMetrics; let ball = shot.metrics.ballMetrics; let swing = shot.metrics.swingMetrics
+            for await shot in self.device.shotEvents {
+                let club = shot.metrics.clubMetrics
+                let ball = shot.metrics.ballMetrics
+                let swing = shot.metrics.swingMetrics
                 let received = Date()
-                continuation?.yield(AppShot(r10ShotID: Int64(shot.metrics.shotId), shotType: String(describing: shot.metrics.shotType), impactAt: shot.wallClockImpactAt, receivedAt: received, clubHeadSpeedMps: club?.clubHeadSpeed, ballSpeedMps: ball?.ballSpeed, launchAngleDeg: ball?.launchAngle, launchDirectionDeg: ball?.launchDirection, totalSpinRpm: ball?.totalSpin, spinAxisDeg: ball?.spinAxis, attackAngleDeg: club?.attackAngle, clubPathDeg: club?.clubAnglePath, clubFaceDeg: club?.clubAngleFace, backswingStartMs: swing?.backSwingStartTime, downswingStartMs: swing?.downSwingStartTime, impactTimeMs: swing?.impactTime, followThroughEndMs: swing?.followThroughEndTime))
+
+                self.continuation?.yield(AppShot(
+                    r10ShotID: Int64(shot.metrics.shotId),
+                    shotType: String(describing: shot.metrics.shotType),
+                    impactAt: shot.wallClockImpactAt,
+                    receivedAt: received,
+                    clubHeadSpeedMps: club?.clubHeadSpeed,
+                    ballSpeedMps: ball?.ballSpeed,
+                    launchAngleDeg: ball?.launchAngle,
+                    launchDirectionDeg: ball?.launchDirection,
+                    totalSpinRpm: ball?.totalSpin,
+                    spinAxisDeg: ball?.spinAxis,
+                    attackAngleDeg: club?.attackAngle,
+                    clubPathDeg: club?.clubAnglePath,
+                    clubFaceDeg: club?.clubAngleFace,
+                    backswingStartMs: swing?.backSwingStartTime,
+                    downswingStartMs: swing?.downSwingStartTime,
+                    impactTimeMs: swing?.impactTime,
+                    followThroughEndMs: swing?.followThroughEndTime
+                ))
             }
         }
-        await device.start(); await connection.start()
+
+        await device.start()
+        await connection.start()
     }
 
     func stop() async {
-        phaseTask?.cancel(); shotTask?.cancel(); phaseTask = nil; shotTask = nil
-        continuation?.finish(); continuation = nil; isConnected = false
+        phaseTask?.cancel()
+        shotTask?.cancel()
+        phaseTask = nil
+        shotTask = nil
+        continuation?.finish()
+        continuation = nil
+        isConnected = false
     }
 }
