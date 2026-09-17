@@ -15,8 +15,12 @@ final class AppModel: ObservableObject {
     private var r10Provider: R10Provider
     private var shotTask: Task<Void, Never>?
 
-    init() throws {
-        store = try ShotStore()
+    init() {
+        do {
+            store = try ShotStore()
+        } catch {
+            fatalError("Failed to create SwiftData store: \(error)")
+        }
         r10Provider = DemoR10Provider()
     }
 
