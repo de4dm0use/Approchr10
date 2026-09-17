@@ -74,6 +74,5 @@ final class R10KitProvider: R10Provider {
         continuation = nil
         isConnected = false
         await device.stop()
-        await connection.stop()
     }
 }
