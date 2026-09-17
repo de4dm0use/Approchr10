@@ -1,0 +1,15 @@
+.DS_Store
+build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+*.xcworkspace/xcuserdata/
+*.moved-aside
+.swiftpm/
+Package.resolved
+
+# Keep local media out of git
+test-media/
+*.mov
+*.mp4
+*.m4v
