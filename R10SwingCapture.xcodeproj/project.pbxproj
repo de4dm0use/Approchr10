@@ -1,0 +1,55 @@
+// !$*UTF8*$!
+{
+ archiveVersion = 1; classes = {}; objectVersion = 60;
+ objects = {
+ A10000000000000000000001 = {isa = PBXBuildFile; fileRef = A20000000000000000000001;};
+ A10000000000000000000002 = {isa = PBXBuildFile; fileRef = A20000000000000000000002;};
+ A10000000000000000000003 = {isa = PBXBuildFile; fileRef = A20000000000000000000003;};
+ A10000000000000000000004 = {isa = PBXBuildFile; fileRef = A20000000000000000000004;};
+ A10000000000000000000005 = {isa = PBXBuildFile; fileRef = A20000000000000000000005;};
+ A10000000000000000000006 = {isa = PBXBuildFile; fileRef = A20000000000000000000006;};
+ A10000000000000000000007 = {isa = PBXBuildFile; fileRef = A20000000000000000000007;};
+ A10000000000000000000008 = {isa = PBXBuildFile; fileRef = A20000000000000000000008;};
+ A10000000000000000000009 = {isa = PBXBuildFile; fileRef = A20000000000000000000009;};
+ A1000000000000000000000A = {isa = PBXBuildFile; fileRef = A2000000000000000000000A;};
+ A1000000000000000000000B = {isa = PBXBuildFile; fileRef = A2000000000000000000000B;};
+ A1000000000000000000000D = {isa = PBXBuildFile; productRef = A40000000000000000000001;};
+ A20000000000000000000001 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = R10SwingCaptureApp.swift; sourceTree = "<group>";};
+ A20000000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>";};
+ A20000000000000000000003 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShotRecord.swift; sourceTree = "<group>";};
+ A20000000000000000000004 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeSession.swift; sourceTree = "<group>";};
+ A20000000000000000000005 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShotStore.swift; sourceTree = "<group>";};
+ A20000000000000000000006 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>";};
+ A20000000000000000000007 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = R10Provider.swift; sourceTree = "<group>";};
+ A20000000000000000000008 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoR10Provider.swift; sourceTree = "<group>";};
+ A20000000000000000000009 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = R10KitProvider.swift; sourceTree = "<group>";};
+ A2000000000000000000000A = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraRecorder.swift; sourceTree = "<group>";};
+ A2000000000000000000000B = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreview.swift; sourceTree = "<group>";};
+ A2000000000000000000000C = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>";};
+ A2000000000000000000000D = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = R10SwingCapture.app; sourceTree = BUILT_PRODUCTS_DIR;};
+ A30000000000000000000001 = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (A1000000000000000000000D); runOnlyForDeploymentPostprocessing = 0;};
+ A30000000000000000000002 = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A10000000000000000000001,A10000000000000000000002,A10000000000000000000003,A10000000000000000000004,A10000000000000000000005,A10000000000000000000006,A10000000000000000000007,A10000000000000000000008,A10000000000000000000009,A1000000000000000000000A,A1000000000000000000000B); runOnlyForDeploymentPostprocessing = 0;};
+ A30000000000000000000003 = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0;};
+ A40000000000000000000001 = {isa = XCSwiftPackageProductDependency; package = A90000000000000000000001; productName = R10Kit;};
+ A50000000000000000000001 = {isa = PBXGroup; children = (A50000000000000000000002,A50000000000000000000009,A50000000000000000000010); sourceTree = "<group>";};
+ A50000000000000000000002 = {isa = PBXGroup; children = (A50000000000000000000003,A50000000000000000000004,A50000000000000000000005,A50000000000000000000006,A50000000000000000000007,A50000000000000000000008); path = R10SwingCapture; sourceTree = "<group>";};
+ A50000000000000000000003 = {isa = PBXGroup; children = (A20000000000000000000005,A20000000000000000000006); path = Core; sourceTree = "<group>";};
+ A50000000000000000000004 = {isa = PBXGroup; children = (A20000000000000000000003,A20000000000000000000004); path = Models; sourceTree = "<group>";};
+ A50000000000000000000005 = {isa = PBXGroup; children = (A20000000000000000000007,A20000000000000000000008,A20000000000000000000009); path = R10; sourceTree = "<group>";};
+ A50000000000000000000006 = {isa = PBXGroup; children = (A2000000000000000000000A,A2000000000000000000000B); path = Camera; sourceTree = "<group>";};
+ A50000000000000000000007 = {isa = PBXGroup; children = (A20000000000000000000002); path = UI; sourceTree = "<group>";};
+ A50000000000000000000008 = {isa = PBXGroup; children = (A2000000000000000000000C); path = Resources; sourceTree = "<group>";};
+ A50000000000000000000009 = {isa = PBXGroup; children = (A20000000000000000000001,A20000000000000000000003,A20000000000000000000004,A20000000000000000000005,A20000000000000000000006,A20000000000000000000007,A20000000000000000000008); path = R10SwingCapture; sourceTree = "<group>";};
+ A50000000000000000000010 = {isa = PBXGroup; children = (A2000000000000000000000D); name = Products; sourceTree = "<group>";};
+ A60000000000000000000001 = {isa = PBXNativeTarget; buildConfigurationList = A70000000000000000000002; buildPhases = (A30000000000000000000002,A30000000000000000000001,A30000000000000000000003); buildRules = (); dependencies = (); name = R10SwingCapture; packageProductDependencies = (A40000000000000000000001); productName = R10SwingCapture; productReference = A2000000000000000000000D; productType = "com.apple.product-type.application";};
+ A70000000000000000000001 = {isa = XCConfigurationList; buildConfigurations = (A70000000000000000000003,A70000000000000000000004); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release;};
+ A70000000000000000000002 = {isa = XCConfigurationList; buildConfigurations = (A70000000000000000000005,A70000000000000000000006); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release;};
+ A70000000000000000000003 = {isa = XCBuildConfiguration; buildSettings = {ALWAYS_SEARCH_USER_PATHS = NO; CLANG_ENABLE_MODULES = YES; CODE_SIGN_STYLE = Automatic; CURRENT_PROJECT_VERSION = 1; INFOPLIST_FILE = R10SwingCapture/Resources/Info.plist; IPHONEOS_DEPLOYMENT_TARGET = 17.0; PRODUCT_BUNDLE_IDENTIFIER = com.opengolftools.R10SwingCapture; PRODUCT_NAME = "$(TARGET_NAME)"; SWIFT_VERSION = 5.0; TARGETED_DEVICE_FAMILY = "1,2";}; name = Debug;};
+ A70000000000000000000004 = {isa = XCBuildConfiguration; buildSettings = {ALWAYS_SEARCH_USER_PATHS = NO; CLANG_ENABLE_MODULES = YES; CODE_SIGN_STYLE = Automatic; CURRENT_PROJECT_VERSION = 1; INFOPLIST_FILE = R10SwingCapture/Resources/Info.plist; IPHONEOS_DEPLOYMENT_TARGET = 17.0; PRODUCT_BUNDLE_IDENTIFIER = com.opengolftools.R10SwingCapture; PRODUCT_NAME = "$(TARGET_NAME)"; SWIFT_OPTIMIZATION_LEVEL = "-O"; SWIFT_VERSION = 5.0; TARGETED_DEVICE_FAMILY = "1,2";}; name = Release;};
+ A70000000000000000000005 = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_STYLE = Automatic; SWIFT_VERSION = 5.0;}; name = Debug;};
+ A70000000000000000000006 = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_STYLE = Automatic; SWIFT_VERSION = 5.0;}; name = Release;};
+ A80000000000000000000001 = {isa = PBXProject; attributes = {LastUpgradeCheck = 2600; ORGANIZATIONNAME = "Open Golf Tools"; TargetAttributes = {A60000000000000000000001 = {CreatedOnToolsVersion = 26.0;};};}; buildConfigurationList = A70000000000000000000001; compatibilityVersion = "Xcode 3.2"; developmentRegion = en; hasScannedForEncodings = 0; knownRegions = (en,Base); mainGroup = A50000000000000000000001; packageReferences = (A90000000000000000000001); productRefGroup = A50000000000000000000010; projectDirPath = ""; projectRoot = ""; targets = (A60000000000000000000001);};
+ A90000000000000000000001 = {isa = XCRemoteSwiftPackageReference; repositoryURL = "https://github.com/OSSGolf/unofficial-r10-ios-sdk"; requirement = {kind = upToNextMajorVersion; minimumVersion = 0.1.0;};};
+ };
+ rootObject = A80000000000000000000001;
+}
