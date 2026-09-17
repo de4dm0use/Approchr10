@@ -1,5 +1,6 @@
 import Foundation
 
+@MainActor
 protocol R10Provider: AnyObject {
     var name: String { get }
     var isConnected: Bool { get }
