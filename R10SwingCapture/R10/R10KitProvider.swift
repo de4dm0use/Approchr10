@@ -23,7 +23,7 @@ final class R10KitProvider: R10Provider {
         phaseTask?.cancel()
         shotTask?.cancel()
 
-        phaseTask = Task { [weak self] in
+        phaseTask = Task<Void, Never> { [weak self] in
             guard let self else { return }
             for await phase in self.connection.phases {
                 await self.device.notifyPhaseChange(phase)
@@ -31,15 +31,21 @@ final class R10KitProvider: R10Provider {
             }
         }
 
-        shotTask = Task { [weak self] in
-            guard let self else { return }
-            for await shot in self.device.shotEvents {
+        // Pull the SDK stream and our output continuation out of the
+        // actor-isolated object before creating the consumer task.
+        // This avoids Swift 5's type-inference ambiguity around Task
+        // closures that capture an actor-isolated R10Device.
+        let shotStream: AsyncStream<R10ShotEvent> = device.shotEvents
+        let shotContinuation = continuation
+
+        let consumerTask: Task<Void, Never> = Task<Void, Never> {
+            for await shot in shotStream {
                 let club = shot.metrics.clubMetrics
                 let ball = shot.metrics.ballMetrics
                 let swing = shot.metrics.swingMetrics
                 let received = Date()
 
-                self.continuation?.yield(AppShot(
+                shotContinuation?.yield(AppShot(
                     r10ShotID: Int64(shot.metrics.shotId),
                     shotType: String(describing: shot.metrics.shotType),
                     impactAt: shot.wallClockImpactAt,
@@ -60,8 +66,9 @@ final class R10KitProvider: R10Provider {
                 ))
             }
         }
+        shotTask = consumerTask
 
-        await device.start()
+        device.start()
         await connection.start()
     }
 
@@ -73,6 +80,6 @@ final class R10KitProvider: R10Provider {
         continuation?.finish()
         continuation = nil
         isConnected = false
-        await device.stop()
+        device.stop()
     }
 }
