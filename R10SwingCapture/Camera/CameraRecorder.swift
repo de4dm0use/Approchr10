@@ -20,7 +20,9 @@ final class CameraRecorder: NSObject, ObservableObject {
         let input = try AVCaptureDeviceInput(device: camera)
         guard session.canAddInput(input), session.canAddOutput(movieOutput) else { throw CameraError.configurationFailed }
         session.addInput(input); session.addOutput(movieOutput)
-        if let connection = movieOutput.connection(with: .video) { connection.videoOrientation = .portrait }
+        if let connection = movieOutput.connection(with: .video), connection.isVideoRotationAngleSupported(90) {
+            connection.videoRotationAngle = 90
+        }
         session.startRunning(); isRunning = true
     }
 
