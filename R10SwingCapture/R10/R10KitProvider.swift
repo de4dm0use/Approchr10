@@ -3,6 +3,7 @@ import R10Kit
 
 /// Adapter around the unofficial reverse-engineered R10Kit package.
 /// Keep the rest of the app independent of R10Kit's concrete types.
+@MainActor
 final class R10KitProvider: R10Provider {
     let name = "Garmin Approach R10"
     private(set) var isConnected = false
@@ -22,17 +23,15 @@ final class R10KitProvider: R10Provider {
         phaseTask?.cancel()
         shotTask?.cancel()
 
-        phaseTask = Task<Void, Never> { [weak self] in
+        phaseTask = Task { [weak self] in
             guard let self else { return }
             for await phase in self.connection.phases {
                 await self.device.notifyPhaseChange(phase)
-                if !Task.isCancelled {
-                    self.isConnected = true
-                }
+                self.isConnected = true
             }
         }
 
-        shotTask = Task<Void, Never> { [weak self] in
+        shotTask = Task { [weak self] in
             guard let self else { return }
             for await shot in self.device.shotEvents {
                 let club = shot.metrics.clubMetrics
@@ -74,5 +73,7 @@ final class R10KitProvider: R10Provider {
         continuation?.finish()
         continuation = nil
         isConnected = false
+        await device.stop()
+        await connection.stop()
     }
 }
