@@ -34,10 +34,6 @@ final class R10KitProvider: R10Provider {
         let shotStream: AsyncStream<R10ShotEvent> = device.shotEvents
         let shotContinuation: AsyncStream<AppShot>.Continuation? = continuation
 
-        // Keep the Task operation tiny. The Xcode 16.4 Swift 5 compiler
-        // has trouble inferring Task's operation type when an AsyncStream
-        // loop is directly inside the closure. The actual loop lives in a
-        // separate nonisolated async function below.
         shotTask = Task<Void, Never> { [shotStream, shotContinuation] in
             await Self.consumeShots(stream: shotStream, continuation: shotContinuation)
         }
@@ -67,7 +63,7 @@ final class R10KitProvider: R10Provider {
             let swing = shot.metrics.swingMetrics
             let received = Date()
 
-            continuation?.yield(AppShot(
+            let appShot: AppShot = AppShot(
                 r10ShotID: Int64(shot.metrics.shotId),
                 shotType: String(describing: shot.metrics.shotType),
                 impactAt: shot.wallClockImpactAt,
@@ -85,7 +81,8 @@ final class R10KitProvider: R10Provider {
                 downswingStartMs: swing?.downSwingStartTime,
                 impactTimeMs: swing?.impactTime,
                 followThroughEndMs: swing?.followThroughEndTime
-            ))
+            )
+            continuation?.yield(appShot)
         }
     }
 }
