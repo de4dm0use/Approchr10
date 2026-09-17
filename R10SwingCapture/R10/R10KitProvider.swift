@@ -61,27 +61,29 @@ final class R10KitProvider: R10Provider {
             let club = shot.metrics.clubMetrics
             let ball = shot.metrics.ballMetrics
             let swing = shot.metrics.swingMetrics
-            let received = Date()
 
-            let appShot: AppShot = AppShot(
-                r10ShotID: Int64(shot.metrics.shotId),
+            // R10Kit uses Float and UInt32 for these values; AppShot stores
+            // Double and Int64. Convert each value explicitly.
+            let appShot = AppShot(
+                r10ShotID: shot.metrics.shotId.map { Int64($0) },
                 shotType: String(describing: shot.metrics.shotType),
                 impactAt: shot.wallClockImpactAt,
-                receivedAt: received,
-                clubHeadSpeedMps: club?.clubHeadSpeed,
-                ballSpeedMps: ball?.ballSpeed,
-                launchAngleDeg: ball?.launchAngle,
-                launchDirectionDeg: ball?.launchDirection,
-                totalSpinRpm: ball?.totalSpin,
-                spinAxisDeg: ball?.spinAxis,
-                attackAngleDeg: club?.attackAngle,
-                clubPathDeg: club?.clubAnglePath,
-                clubFaceDeg: club?.clubAngleFace,
-                backswingStartMs: swing?.backSwingStartTime,
-                downswingStartMs: swing?.downSwingStartTime,
-                impactTimeMs: swing?.impactTime,
-                followThroughEndMs: swing?.followThroughEndTime
+                receivedAt: Date(),
+                clubHeadSpeedMps: club?.clubHeadSpeed.map { Double($0) },
+                ballSpeedMps: ball?.ballSpeed.map { Double($0) },
+                launchAngleDeg: ball?.launchAngle.map { Double($0) },
+                launchDirectionDeg: ball?.launchDirection.map { Double($0) },
+                totalSpinRpm: ball?.totalSpin.map { Double($0) },
+                spinAxisDeg: ball?.spinAxis.map { Double($0) },
+                attackAngleDeg: club?.attackAngle.map { Double($0) },
+                clubPathDeg: club?.clubAnglePath.map { Double($0) },
+                clubFaceDeg: club?.clubAngleFace.map { Double($0) },
+                backswingStartMs: swing?.backSwingStartTime.map { Int64($0) },
+                downswingStartMs: swing?.downSwingStartTime.map { Int64($0) },
+                impactTimeMs: swing?.impactTime.map { Int64($0) },
+                followThroughEndMs: swing?.followThroughEndTime.map { Int64($0) }
             )
+
             continuation?.yield(appShot)
         }
     }
