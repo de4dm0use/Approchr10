@@ -31,14 +31,14 @@ final class R10KitProvider: R10Provider {
             }
         }
 
-        // Pull the SDK stream and our output continuation out of the
-        // actor-isolated object before creating the consumer task.
-        // This avoids Swift 5's type-inference ambiguity around Task
-        // closures that capture an actor-isolated R10Device.
+        // R10ShotEvent and AppShot are Sendable. The SDK exposes
+        // shotEvents as a nonisolated AsyncStream, so consume it in a
+        // detached task. This avoids Swift 5/Xcode 16's ambiguous Task
+        // initializer when an actor-isolated R10Device is captured.
         let shotStream: AsyncStream<R10ShotEvent> = device.shotEvents
-        let shotContinuation = continuation
+        let shotContinuation: AsyncStream<AppShot>.Continuation? = continuation
 
-        let consumerTask: Task<Void, Never> = Task<Void, Never> {
+        shotTask = Task.detached(priority: nil) {
             for await shot in shotStream {
                 let club = shot.metrics.clubMetrics
                 let ball = shot.metrics.ballMetrics
@@ -66,7 +66,6 @@ final class R10KitProvider: R10Provider {
                 ))
             }
         }
-        shotTask = consumerTask
 
         await device.start()
         await connection.start()
