@@ -68,7 +68,7 @@ final class R10KitProvider: R10Provider {
         }
         shotTask = consumerTask
 
-        device.start()
+        await device.start()
         await connection.start()
     }
 
@@ -80,6 +80,6 @@ final class R10KitProvider: R10Provider {
         continuation?.finish()
         continuation = nil
         isConnected = false
-        device.stop()
+        await device.stop()
     }
 }
