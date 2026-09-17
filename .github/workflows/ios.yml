@@ -1,0 +1,22 @@
+name: iOS build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build for Simulator
+        run: |
+          xcodebuild \
+            -project R10SwingCapture.xcodeproj \
+            -scheme R10SwingCapture \
+            -sdk iphonesimulator \
+            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            CODE_SIGNING_ALLOWED=NO \
+            build
